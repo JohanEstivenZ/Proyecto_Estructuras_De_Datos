@@ -1,17 +1,16 @@
-
 package com.uniquindio.bibliotecaonline.modelo;
-
-
 
 public class Libro implements Comparable<Libro> {
     private String titulo;
     private String autor;
     private String categoria;
-    private int añoPublicacion; 
-    private String estado; 
+    private int añoPublicacion;
+    private String estado;
     private double calificacion;
 
-    // Constantes para los estados
+    private int totalValoraciones;
+    private int sumaValoraciones;
+
     public static final String DISPONIBLE = "Disponible";
     public static final String PRESTADO = "Prestado";
 
@@ -20,26 +19,30 @@ public class Libro implements Comparable<Libro> {
         this.autor = autor;
         this.categoria = categoria;
         this.añoPublicacion = añoPublicacion;
-        setEstado(estado); // Usamos el setter para validación
+        setEstado(estado);
         this.calificacion = calificacion;
+        this.totalValoraciones = 0;
+        this.sumaValoraciones = 0;
     }
-    
-    // Constructor simplificado para búsquedas
+
     public Libro(String titulo) {
-        this.titulo = titulo;
-        // Inicializar otros campos con valores por defecto
-        this.autor = "";
-        this.categoria = "";
-        this.añoPublicacion = 0;
-        this.estado = DISPONIBLE;
-        this.calificacion = 0.0;
+        this(titulo, "", "", 0, DISPONIBLE, 0.0);
     }
-    
+
+    public void registrarValoracion(int estrellas) {
+        if (estrellas < 1 || estrellas > 5) {
+            throw new IllegalArgumentException("La valoración debe estar entre 1 y 5.");
+        }
+        sumaValoraciones += estrellas;
+        totalValoraciones++;
+        calificacion = (double) sumaValoraciones / totalValoraciones;
+    }
+
     @Override
     public int compareTo(Libro otro) {
         return this.titulo.compareToIgnoreCase(otro.titulo);
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -47,13 +50,12 @@ public class Libro implements Comparable<Libro> {
         Libro libro = (Libro) obj;
         return titulo.equalsIgnoreCase(libro.titulo);
     }
-    
+
     @Override
     public int hashCode() {
         return titulo.toLowerCase().hashCode();
     }
 
-    // Getters y Setters
     public String getTitulo() {
         return titulo;
     }
@@ -102,35 +104,39 @@ public class Libro implements Comparable<Libro> {
         return calificacion;
     }
 
+    // Ya no se recomienda usar este método directamente
     public void setCalificacion(double calificacion) {
-        // Validar que la calificación esté entre 0 y 5
         if (calificacion < 0 || calificacion > 5) {
             throw new IllegalArgumentException("La calificación debe estar entre 0 y 5");
         }
         this.calificacion = calificacion;
+        this.totalValoraciones = 1;
+        this.sumaValoraciones = (int) calificacion;
     }
-    
-    // Método para cambiar el estado a prestado
+
+    public int getTotalValoraciones() {
+        return totalValoraciones;
+    }
+
     public void prestar() {
         if (this.estado.equals(PRESTADO)) {
             throw new IllegalStateException("El libro ya está prestado");
         }
         this.estado = PRESTADO;
     }
-    
-    // Método para devolver un libro
+
     public void devolver() {
         if (this.estado.equals(DISPONIBLE)) {
             throw new IllegalStateException("El libro ya está disponible");
         }
         this.estado = DISPONIBLE;
     }
-    
+
     @Override
     public String toString() {
         return String.format(
-            "Libro [Título: %s, Autor: %s, Categoría: %s, Año: %d, Estado: %s, Calificación: %.1f]",
-            titulo, autor, categoria, añoPublicacion, estado, calificacion
+                "Libro [Título: %s, Autor: %s, Categoría: %s, Año: %d, Estado: %s, Calificación: %.2f (%d valoraciones)]",
+                titulo, autor, categoria, añoPublicacion, estado, calificacion, totalValoraciones
         );
     }
 }

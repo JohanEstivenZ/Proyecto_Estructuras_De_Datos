@@ -5,10 +5,24 @@ import java.time.LocalDate;
 
 public class Lector extends Usuario implements Comparable<Lector>{
 
-    protected ListaEnlazada<Prestamo> historialPrestamos;
+    public ListaEnlazada<Prestamo> historialPrestamos;
     protected ListaEnlazada<Valoracion> valoraciones;
-    
 
+    public ListaEnlazada<Prestamo> getHistorialPrestamos() {
+        return historialPrestamos;
+    }
+
+    public ListaEnlazada<Valoracion> getValoraciones() {
+        return valoraciones;
+    }
+
+    public void setHistorialPrestamos(ListaEnlazada<Prestamo> historialPrestamos) {
+        this.historialPrestamos = historialPrestamos;
+    }
+
+    public void setValoraciones(ListaEnlazada<Valoracion> valoraciones) {
+        this.valoraciones = valoraciones;
+    }
 
     public Lector(String idUsuario, String nombre, String correo, String contraseña, LocalDate añoNacimiento) {
         super(idUsuario, nombre, correo, contraseña, añoNacimiento);

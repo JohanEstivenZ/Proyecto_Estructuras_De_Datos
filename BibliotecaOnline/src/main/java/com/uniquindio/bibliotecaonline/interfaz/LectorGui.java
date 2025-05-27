@@ -6,6 +6,7 @@ import com.uniquindio.bibliotecaonline.logica.GestorLectores;
 import com.uniquindio.bibliotecaonline.logica.GestorLibros;
 import com.uniquindio.bibliotecaonline.logica.GestorPrestamos;
 import com.uniquindio.bibliotecaonline.modelo.Lector;
+import com.uniquindio.bibliotecaonline.modelo.Prestamo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -155,6 +156,13 @@ public class LectorGui extends JFrame {
             comboCategorias.setEnabled(false);
             comboAutores.setEnabled(false);
         });
+        btnDevolverLibro.addActionListener(e -> mostrarLibrosPrestadosParaDevolver());
+        btnValorarLibro.addActionListener(e -> {
+            new ValorarLibrosGui(lectorActual,this);
+            this.setVisible(true); // opcional: oculta la ventana actual si quieres
+        });
+
+
 
         rbtnAutor.addActionListener(e -> {
             campoBusqueda.setEnabled(false);
@@ -192,8 +200,56 @@ public class LectorGui extends JFrame {
             bibliotecaGUI.setVisible(true);
             dispose();
         });
+        btnDevolverLibro.addActionListener(e -> mostrarLibrosPrestadosParaDevolver());
 
         // Aquí puedes agregar listeners para btnSolicitarPrestamo, btnValorarLibro, etc.
+    }
+
+    private void mostrarLibrosPrestadosParaDevolver() {
+        panelPrincipal.removeAll();
+
+        boolean tieneLibrosPrestados = false;
+
+        for (int i = 0; i < lectorActual.getHistorialPrestamos().size(); i++) {
+            Prestamo prestamo = lectorActual.getHistorialPrestamos().obtener(i);
+
+            if (!prestamo.isDevuelto()) {
+                tieneLibrosPrestados = true;
+                Libro libro = prestamo.getLibro();
+
+                JPanel panel = new JPanel(new BorderLayout());
+                panel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+                panel.setPreferredSize(new Dimension(500, 60));
+
+                JLabel lblTitulo = new JLabel(libro.getTitulo());
+                JLabel lblDetalles = new JLabel("Fecha de préstamo: " + prestamo.getFechaPrestamo());
+
+                JButton btnDevolver = new JButton("Devolver");
+                btnDevolver.addActionListener(ev -> {
+                    boolean devuelto = gestor.devolverLibro(lectorActual, libro);
+                    if (devuelto) {
+                        JOptionPane.showMessageDialog(this, "Libro devuelto correctamente.");
+                        mostrarLibrosPrestadosParaDevolver(); // Recargar lista
+                    } else {
+                        JOptionPane.showMessageDialog(this, "No se pudo devolver el libro.");
+                    }
+                });
+
+                panel.add(lblTitulo, BorderLayout.NORTH);
+                panel.add(lblDetalles, BorderLayout.CENTER);
+                panel.add(btnDevolver, BorderLayout.EAST);
+
+                panelPrincipal.add(panel);
+                panelPrincipal.add(Box.createRigidArea(new Dimension(0, 10)));
+            }
+        }
+
+        if (!tieneLibrosPrestados) {
+            panelPrincipal.add(new JLabel("No tienes libros pendientes por devolver."));
+        }
+
+        panelPrincipal.revalidate();
+        panelPrincipal.repaint();
     }
 
     private void cargarAutores() {
@@ -286,6 +342,7 @@ public class LectorGui extends JFrame {
                 JOptionPane.showMessageDialog(this, "Error al devolver el libro.");
             }
         }
+
     }
 
 }

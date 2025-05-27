@@ -85,6 +85,16 @@ public class ListaEnlazada<T extends Comparable<T>> implements Iterable<T>{
         }
         tamaño++;
     }
+    public T obtener(int indice) {
+        if (indice < 0 || indice >= tamaño) {
+            throw new IndexOutOfBoundsException("Índice fuera de rango");
+        }
+        Nodo<T> actual = primero;
+        for (int i = 0; i < indice; i++) {
+            actual = actual.enlace;
+        }
+        return actual.dato;
+    }
 
     /**
      * Inserta un elemento al final de la lista.

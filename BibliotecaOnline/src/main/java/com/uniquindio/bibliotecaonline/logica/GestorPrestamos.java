@@ -90,13 +90,18 @@ public class GestorPrestamos {
         if (lector == null || libro == null) {
             throw new IllegalArgumentException("Lector y libro no pueden ser null");
         }
-        if (libro.getEstado().equals(Libro.PRESTADO)) {
-            libro.setEstado(Libro.DISPONIBLE);
-            // Opcional: actualizar historial o estado del préstamo (buscar y marcar como devuelto)
-            return true;
+
+        for (Prestamo prestamo : lector.getHistorialPrestamos()) {
+            if (prestamo.getLibro().equals(libro) && !prestamo.isDevuelto()) {
+                prestamo.setDevuelto(true); // <-- Esto es fundamental
+                libro.setEstado(Libro.DISPONIBLE);
+                return true;
+            }
         }
-        return false;
+
+        return false; // No se encontró préstamo activo para ese libro
     }
+
 
     // Resto de métodos...
     /**
