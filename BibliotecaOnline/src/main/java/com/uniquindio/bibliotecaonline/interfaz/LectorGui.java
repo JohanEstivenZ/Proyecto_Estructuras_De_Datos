@@ -158,8 +158,9 @@ public class LectorGui extends JFrame {
         });
         btnDevolverLibro.addActionListener(e -> mostrarLibrosPrestadosParaDevolver());
         btnValorarLibro.addActionListener(e -> {
+            System.out.println("Valorar libros");
             new ValorarLibrosGui(lectorActual,this);
-            this.setVisible(true); // opcional: oculta la ventana actual si quieres
+            this.setVisible(false); // opcional: oculta la ventana actual si quieres
         });
 
 
