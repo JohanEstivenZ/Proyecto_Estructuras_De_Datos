@@ -64,6 +64,7 @@ public class ValorarLibrosGui extends JFrame {
             ventanaAnterior.setVisible(true);
         });
 
+
         JPanel panelBotones = new JPanel();
         panelBotones.add(btnValorar);
         panelBotones.add(btnAtras);

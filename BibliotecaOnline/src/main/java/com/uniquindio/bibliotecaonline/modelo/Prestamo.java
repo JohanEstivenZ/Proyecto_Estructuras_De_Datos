@@ -56,5 +56,10 @@ public class Prestamo implements Comparable<Prestamo> {
     public int compareTo(Prestamo otro) {
         return this.fechaPrestamo.compareTo(otro.fechaPrestamo);
     }
+    @Override
+    public String toString() {
+        return libro.getTitulo() + " (Prestado el: " + fechaPrestamo + ")";
+    }
+
 
 }

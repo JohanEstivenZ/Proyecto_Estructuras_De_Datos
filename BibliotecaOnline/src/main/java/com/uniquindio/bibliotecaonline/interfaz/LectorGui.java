@@ -158,9 +158,39 @@ public class LectorGui extends JFrame {
         });
         btnDevolverLibro.addActionListener(e -> mostrarLibrosPrestadosParaDevolver());
         btnValorarLibro.addActionListener(e -> {
-            System.out.println("Valorar libros");
-            new ValorarLibrosGui(lectorActual,this);
-            this.setVisible(false); // opcional: oculta la ventana actual si quieres
+            Prestamo seleccionado = listaPrestamos.getSelectedValue();
+            if (seleccionado != null) {
+                String[] opciones = { "1", "2", "3", "4", "5" };
+                String input = (String) JOptionPane.showInputDialog(
+                        this,
+                        "Selecciona una valoración (1-5 estrellas):",
+                        "Valorar Libro",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        opciones,
+                        opciones[4]
+                );
+
+                if (input != null) {
+                    try {
+                        int valoracion = Integer.parseInt(input);
+                        Libro libro = seleccionado.getLibro();
+                        libro.registrarValoracion(valoracion); // Ya confirmado que existe
+
+                        seleccionado.setDevuelto(true); // Marcar préstamo como devuelto
+
+                        // Eliminar el préstamo de la lista visible
+                        modelo.removeElement(seleccionado);
+
+                        JOptionPane.showMessageDialog(this, "Libro valorado y devuelto correctamente.");
+
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(this, "Valoración inválida. Intenta de nuevo.");
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Selecciona un préstamo para valorar.");
+            }
         });
 
 
