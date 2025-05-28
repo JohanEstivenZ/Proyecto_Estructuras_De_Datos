@@ -71,6 +71,15 @@ public class GestorLibros {
     public ListaEnlazada<Libro> getListaLibros() {
         return listaLibros;
     }
+    public boolean eliminarLibroPorTitulo(String titulo) {
+        for (Libro libro : listaLibros) {
+            if (libro.getTitulo().equalsIgnoreCase(titulo)) {
+                listaLibros.eliminarElemento(libro);
+                return true;
+            }
+        }
+        return false;
+    }
     
     // Otros métodos como buscarLibro, eliminarLibro, etc.
 }

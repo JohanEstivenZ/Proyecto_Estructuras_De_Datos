@@ -62,6 +62,11 @@ public class ListaEnlazada<T extends Comparable<T>> implements Iterable<T>{
         return primero == null;
     }
 
+    public void eliminarElemento(T valor) {
+        eliminarNodo(valor);
+    }
+
+
     /**
      * Obtiene el número de elementos en la lista.
      *

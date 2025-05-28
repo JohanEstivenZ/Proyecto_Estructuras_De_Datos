@@ -122,6 +122,8 @@ public class GestorLectores {
         return null;
     }
 
+
+
     public ListaEnlazada<Lector> getLectores() {
         return lectores;
     }
