@@ -12,8 +12,8 @@ public class LoguinAdminGui extends JFrame implements ActionListener{
     private BibliotecaGUI bibliotecaGUI; // Referencia a la interfaz principal
     
     // Datos correctos del administrador
-    private final String ADMIN_USUARIO = "JhonMendez";
-    private final String ADMIN_CONTRASENA = "1094948414";
+    private final String ADMIN_USUARIO = "admin";
+    private final String ADMIN_CONTRASENA = "123";
 
     // Componentes gráficos
     private JTextField campoUsuario;
