@@ -3,13 +3,12 @@ package com.uniquindio.bibliotecaonline.logica;
 
 import com.uniquindio.bibliotecaonline.modelo.Libro;
 import com.uniquindio.bibliotecaonline.estructuras.ListaEnlazada;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
+
+import java.io.*;
 
 public class GestorLibros {
     private ListaEnlazada<Libro> listaLibros;
+    private final File archivo = new File("src/main/resources/libros.txt");
 
     public GestorLibros() {
         this.listaLibros = new ListaEnlazada<>();
@@ -17,14 +16,7 @@ public class GestorLibros {
     }
 
     private void cargarLibrosDesdeArchivo() {
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("libros.txt");
-        
-        if (inputStream == null) {
-            System.err.println("No se encontró el archivo libros.txt en resources");
-            return;
-        }
-
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String linea;
             while ((linea = br.readLine()) != null) {
                 String[] partes = linea.split(",");
@@ -35,9 +27,9 @@ public class GestorLibros {
                     int año = Integer.parseInt(partes[3].trim());
                     String estado = partes[4].trim();
                     double calificacion = Double.parseDouble(partes[5].trim());
-                    
+
                     Libro libro = new Libro(titulo, autor, genero, año, estado, calificacion);
-                    agregarLibro(libro);
+                    listaLibros.insertarElementoAlFinal(libro);
                 } else {
                     System.err.println("Formato incorrecto en línea: " + linea);
                 }
@@ -48,38 +40,52 @@ public class GestorLibros {
             System.err.println("Error en formato numérico: " + e.getMessage());
         }
     }
-    
-    public ListaEnlazada<String> obtenerTodosLosAutores() {
-    ListaEnlazada<String> autores = new ListaEnlazada<>();
-    for (Libro libro : listaLibros) {  // Usa listaLibros que tienes aquí
-        String autor = libro.getAutor();
-        if (!autores.busqueda(autor)) {
-            autores.insertarElementoAlFinal(autor);
+
+    private void guardarLibrosEnArchivo() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(archivo))) {
+            for (Libro libro : listaLibros) {
+                writer.println(libro.getTitulo() + "," +
+                        libro.getAutor() + "," +
+                        libro.getCategoria() + "," +
+                        libro.getAñoPublicacion() + "," +
+                        libro.getEstado() + "," +
+                        libro.getCalificacion());
+            }
+        } catch (IOException e) {
+            System.err.println("Error al guardar libros: " + e.getMessage());
         }
     }
-    return autores;
-}
-
 
     public void agregarLibro(Libro libro) {
         if (libro != null) {
             listaLibros.insertarElementoAlFinal(libro);
+            guardarLibrosEnArchivo(); // Guardar en el archivo
         }
     }
 
-    // Resto de métodos de tu GestorLibros...
-    public ListaEnlazada<Libro> getListaLibros() {
-        return listaLibros;
-    }
     public boolean eliminarLibroPorTitulo(String titulo) {
         for (Libro libro : listaLibros) {
             if (libro.getTitulo().equalsIgnoreCase(titulo)) {
                 listaLibros.eliminarElemento(libro);
+                guardarLibrosEnArchivo(); // Guardar cambios
                 return true;
             }
         }
         return false;
     }
-    
-    // Otros métodos como buscarLibro, eliminarLibro, etc.
+
+    public ListaEnlazada<Libro> getListaLibros() {
+        return listaLibros;
+    }
+
+    public ListaEnlazada<String> obtenerTodosLosAutores() {
+        ListaEnlazada<String> autores = new ListaEnlazada<>();
+        for (Libro libro : listaLibros) {
+            String autor = libro.getAutor();
+            if (!autores.busqueda(autor)) {
+                autores.insertarElementoAlFinal(autor);
+            }
+        }
+        return autores;
+    }
 }
