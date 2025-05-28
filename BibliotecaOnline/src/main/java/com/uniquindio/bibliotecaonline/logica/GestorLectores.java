@@ -121,6 +121,12 @@ public class GestorLectores {
         }
         return null;
     }
+    public void agregarLector(Lector lector) {
+        if (lector != null) {
+            lectores.insertarElementoAlFinal(lector);
+        }
+    }
+
 
 
 
