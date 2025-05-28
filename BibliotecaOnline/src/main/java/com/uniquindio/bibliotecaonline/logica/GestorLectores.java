@@ -126,6 +126,14 @@ public class GestorLectores {
             lectores.insertarElementoAlFinal(lector);
         }
     }
+    public void eliminarLector(String id) {
+        for (Lector lector : lectores) {
+            if (lector.getIdUsuario().equalsIgnoreCase(id)) {
+                lectores.eliminarElemento(lector);
+                return;
+            }
+        }
+    }
 
 
 

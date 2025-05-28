@@ -5,6 +5,7 @@ import com.uniquindio.bibliotecaonline.modelo.Lector;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDate;
 
 public class GestionUsuariosGui extends JFrame {
 
@@ -20,6 +21,9 @@ public class GestionUsuariosGui extends JFrame {
 
         JTextField campoNombre = new JTextField();
         JTextField campoId = new JTextField();
+        JTextField campoCorreo = new JTextField();
+        JTextField campoContraseña = new JTextField();
+        JTextField campoNacimiento = new JTextField();
 
         JButton btnAgregar = new JButton("Agregar Usuario");
         JButton btnEliminar = new JButton("Eliminar Usuario");
@@ -28,12 +32,18 @@ public class GestionUsuariosGui extends JFrame {
         add(campoNombre);
         add(new JLabel("ID:"));
         add(campoId);
+        add(new JLabel("Correo:"));
+        add(campoCorreo);
+        add(new JLabel("Contrasena:"));
+        add(campoContraseña);
+        add(new JLabel("Año de Nacimiento:"));
+        add(campoNacimiento);
 
         add(btnAgregar);
         add(btnEliminar);
 
         btnAgregar.addActionListener(e -> {
-            gestorLectores.agregarLector(new Lector(campoId.getText(), campoNombre.getText()));
+            gestorLectores.agregarLector(new Lector(campoId.getText(), campoNombre.getText(),campoCorreo.getText(),campoContraseña.getText(), LocalDate.parse(campoNacimiento.getText())));
             JOptionPane.showMessageDialog(this, "Usuario agregado.");
         });
 
